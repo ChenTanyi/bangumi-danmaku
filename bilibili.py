@@ -53,7 +53,7 @@ class Bilibili():
         logging.error(f'Unsupport uri: {uri}')
 
     def download_bangumi(self, uri):
-        html_content = self.request(uri)
+        html_content = self.request(uri).decode()
         initial_state_match = re.search(
             r'__INITIAL_STATE__=(.*?);\(function\(\)', html_content)
         if not initial_state_match:
@@ -70,7 +70,7 @@ class Bilibili():
 
         now = datetime.datetime.now().strftime('%Y.%m.%d')
         cid = initial_state['epInfo']['cid']
-        title = initial_state['epInfo']['long_title']
+        title = initial_state['epInfo']['longTitle']
         index = initial_state['epInfo']['title']
 
         filename = f'downloads/{ep_id}.{bangumi_title}/{cid}.{title}[{index:0>2s}].{now}.xml'
