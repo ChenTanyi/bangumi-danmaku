@@ -215,7 +215,7 @@ def ReadCommentsTudou2(f, fontsize):
             c = str(comment['content'])
             prop = json.loads(str(comment['propertis']) or '{}')
             size = int(prop.get('size', 1))
-            assert size in (0, 1, 2)
+            size = size if 0 <= size <= 2 else 0 if size < 0 else 2
             size = {0: 0.64, 1: 1, 2: 1.44}[size] * fontsize
             pos = int(prop.get('pos', 3))
             assert pos in (0, 3, 4, 6)
