@@ -9,15 +9,17 @@ import logging
 import requests
 import datetime
 
-# OUTPUT_FILTER = 'd:/movies/*[{:0>2s}]*.mkv'
+# OUTPUT_FILTER = 'd:/movies/*[[]{:0>2s}[]]*.mkv'
 
 
 def convert_to_ass(input_file, output_file):
     os.system(
-        f'python danmaku2ass.py -s 1920x1080 -a 0.25 -dm 25 -ds 25 -o "{output_file}" "{input_file}"')
+        f'python danmaku2ass.py -s 1920x1080 -a 0.25 -dm 25 -ds 25 -o "{output_file}" "{input_file}"'
+    )
 
 
 class Bilibili():
+
     @staticmethod
     def comment_api(cid):
         return f'http://comment.bilibili.com/{cid}.xml'
@@ -41,12 +43,12 @@ class Bilibili():
                 f'Request error: status {r.status_code}, reason {r.reason}')
 
     def run(self, uri):
-        m = re.match(
-            r'https?://(?:www\.)?bilibili\.com/bangumi/media/md(\d+)', uri)
+        m = re.match(r'https?://(?:www\.)?bilibili\.com/bangumi/media/md(\d+)',
+                     uri)
         if m:
             return self.download_bangumi_list(m.group(1))
-        m = re.match(
-            r'https?://(?:www\.)?bilibili\.com/bangumi/play/ep(\d+)', uri)
+        m = re.match(r'https?://(?:www\.)?bilibili\.com/bangumi/play/ep(\d+)',
+                     uri)
         if m:
             return self.download_bangumi(uri)
 
@@ -85,7 +87,8 @@ class Bilibili():
             return
 
         bangumi_list = json.loads(self.request(self.bangumi_list_api(sid)))
-        if bangumi_list.get('code') == 0 and bangumi_list.get('message') == 'success':
+        if bangumi_list.get('code') == 0 and bangumi_list.get(
+                'message') == 'success':
             now = datetime.datetime.now().strftime('%Y.%m.%d')
             for episode in bangumi_list['result']['main_section']['episodes']:
                 title = episode['long_title']
@@ -98,11 +101,11 @@ class Bilibili():
             logging.error(f'Get bangumi list error: {bangumi_list}')
             return
 
-    def download_comments(self, cid, filename, index=None):
+    def download_comments(self, cid, filename, index = None):
         global OUTPUT_FILTER
         dirname = os.path.dirname(filename)
         if not os.path.exists(dirname):
-            os.makedirs(dirname, exist_ok=True)
+            os.makedirs(dirname, exist_ok = True)
 
         with open(filename, 'wb') as f:
             f.write(self.request(self.comment_api(cid)))
@@ -122,8 +125,7 @@ class Bilibili():
 
 
 if __name__ == "__main__":
-    global OUTPUT_FILTER
-    logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s')
+    logging.basicConfig(format = '%(asctime)s %(levelname)s %(message)s')
     if len(sys.argv) > 2:
         OUTPUT_FILTER = sys.argv[2]
 
