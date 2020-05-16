@@ -37,7 +37,7 @@ class Youku():
             resp.raise_for_status()
             results = results + resp.json().get('result', [])
 
-        self.write_comment({'result': results}, f'downloads/{title}.json')
+        self.write_comment({'result': results}, f'downloads/youku/{title}.json')
 
     def write_comment(self, comments, filename):
         global OUTPUT_FILTER
