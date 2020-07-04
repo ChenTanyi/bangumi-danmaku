@@ -9,7 +9,7 @@ import logging
 import requests
 import datetime
 
-# OUTPUT_FILTER = 'd:/movies/*[[]{:0>2s}[]]*.mkv'
+OUTPUT_FILTER = 'd:/movie/test/*[[]{:0>2s}[]]*.mkv'
 
 
 def convert_to_ass(input_file, output_file):
@@ -109,6 +109,8 @@ class Bilibili():
 
         with open(filename, 'wb') as f:
             f.write(self.request(self.comment_api(cid)))
+
+        convert_to_ass(filename, f'{filename}.danmaku.ass')
         if 'OUTPUT_FILTER' in globals() and OUTPUT_FILTER:
             try:
                 output_filter = OUTPUT_FILTER.format(index)
@@ -120,8 +122,6 @@ class Bilibili():
             else:
                 for f in glob.glob(output_filter):
                     convert_to_ass(filename, f'{f}.danmaku.ass')
-        else:
-            convert_to_ass(filename, f'{filename}.danmaku.ass')
 
 
 if __name__ == "__main__":

@@ -48,14 +48,13 @@ class Youku():
         with open(filename, 'w', encoding = 'utf-8') as fout:
             json.dump(comments, fout, ensure_ascii = False, indent = 2)
 
+        convert_to_ass(filename, f'{filename}.danmaku.ass')
         if 'OUTPUT_FILTER' in globals() and OUTPUT_FILTER:
             if os.path.exists(OUTPUT_FILTER):
                 convert_to_ass(filename, f'{OUTPUT_FILTER}.danmaku.ass')
             else:
                 for f in glob.glob(OUTPUT_FILTER):
                     convert_to_ass(filename, f'{f}.danmaku.ass')
-        else:
-            convert_to_ass(filename, f'{filename}.danmaku.ass')
 
 
 if __name__ == "__main__":
