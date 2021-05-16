@@ -86,6 +86,8 @@ class Bilibili():
             logging.error(f'Get bangumi error: {bangumi}')
             return
 
+        if bangumi['result'].get('media', dict()).get('season_id'):
+            sid = bangumi['result']['media']['season_id']
         bangumi_list = json.loads(self.request(self.bangumi_list_api(sid)))
         if bangumi_list.get('code') == 0 and bangumi_list.get(
                 'message') == 'success':
