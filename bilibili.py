@@ -9,6 +9,7 @@ import logging
 import requests
 import datetime
 
+OUTPUT_FOLDER = ''
 OUTPUT_FILTER = 'd:/movie/test/*[[]{:0>2s}[]]*.mkv'
 
 
@@ -104,7 +105,7 @@ class Bilibili():
             return
 
     def download_comments(self, cid, filename, index = None):
-        global OUTPUT_FILTER
+        global OUTPUT_FILTER, OUTPUT_FOLDER
         dirname = os.path.dirname(filename)
         if not os.path.exists(dirname):
             os.makedirs(dirname, exist_ok = True)
@@ -113,23 +114,34 @@ class Bilibili():
             f.write(self.request(self.comment_api(cid)))
 
         convert_to_ass(filename, f'{filename}.danmaku.ass')
-        if 'OUTPUT_FILTER' in globals() and OUTPUT_FILTER:
-            try:
-                output_filter = OUTPUT_FILTER.format(index)
-            except:
-                output_filter = OUTPUT_FILTER
 
-            if os.path.exists(output_filter):
-                convert_to_ass(filename, f'{output_filter}.danmaku.ass')
-            else:
-                for f in glob.glob(output_filter):
-                    convert_to_ass(filename, f'{f}.danmaku.ass')
+        cwd = os.curdir
+        try:
+            if 'OUTPUT_FOLDER' in globals() and OUTPUT_FOLDER:
+                os.chdir(OUTPUT_FOLDER)
+
+            if 'OUTPUT_FILTER' in globals() and OUTPUT_FILTER:
+                try:
+                    output_filter = OUTPUT_FILTER.format(index)
+                except:
+                    output_filter = OUTPUT_FILTER
+
+                if os.path.exists(output_filter):
+                    convert_to_ass(filename, f'{output_filter}.danmaku.ass')
+                else:
+                    for f in glob.glob(output_filter):
+                        convert_to_ass(filename, f'{f}.danmaku.ass')
+        finally:
+            os.chdir(cwd)
 
 
 if __name__ == "__main__":
     logging.basicConfig(format = '%(asctime)s %(levelname)s %(message)s')
     if len(sys.argv) > 2:
         OUTPUT_FILTER = sys.argv[2]
+
+    if len(sys.argv) > 3:
+        OUTPUT_FOLDER = sys.argv[3]
 
     if len(sys.argv) < 2:
         print(f'Usage: {sys.argv[0]} uri')
