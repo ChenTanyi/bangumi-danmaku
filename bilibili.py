@@ -10,8 +10,8 @@ import requests
 import datetime
 import danmaku2ass
 
-OUTPUT_FOLDER = ''
-OUTPUT_FILTER = 'd:/movie/test/*[[]{:0>2s}[]]*.mkv'
+OUTPUT_FOLDER = r'D:\Movie'
+OUTPUT_FILTER = '*[[]{:0>2s}[]]*.mkv'
 
 
 def convert_to_ass(input_file, output_file):
