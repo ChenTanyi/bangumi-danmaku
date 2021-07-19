@@ -8,14 +8,25 @@ import glob
 import logging
 import requests
 import datetime
+import danmaku2ass
 
 OUTPUT_FOLDER = ''
 OUTPUT_FILTER = 'd:/movie/test/*[[]{:0>2s}[]]*.mkv'
 
 
 def convert_to_ass(input_file, output_file):
-    os.system(
-        f'python danmaku2ass.py -s 1920x1080 -a 0.25 -dm 25 -ds 25 -o "{output_file}" "{input_file}"'
+    print(
+        f'convert {input_file} -> {output_file} in {os.path.abspath(os.curdir)}'
+    )
+    danmaku2ass.Danmaku2ASS(
+        input_file,
+        'autodetect',
+        output_file,
+        1920,
+        1080,
+        text_opacity = 0.25,
+        duration_marquee = 25,
+        duration_still = 25,
     )
 
 
@@ -115,7 +126,8 @@ class Bilibili():
 
         convert_to_ass(filename, f'{filename}.danmaku.ass')
 
-        cwd = os.curdir
+        cwd = os.path.abspath(os.curdir)
+        filename = os.path.abspath(filename)
         try:
             if 'OUTPUT_FOLDER' in globals() and OUTPUT_FOLDER:
                 os.chdir(OUTPUT_FOLDER)
